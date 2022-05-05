@@ -213,17 +213,29 @@ function createHUDOverlay() {
 
 // initial gui setup
 let foregroundHUD = createHUDOverlay();
+let hidden = false;
 mainHUD.addChildren(foregroundHUD);
 
 register('renderOverlay', () => {
     guiMover();
-    if (foregroundHUD && Settings.enabled) {
-        mainHUD.draw();
+    if (Settings.enabled) {
+        if (hidden) {
+            hidden = false;
+            foregroundHUD = createHUDOverlay();
+            mainHUD.addChildren(foregroundHUD);
+        }
+    } else {
+        if (!hidden) {
+            hidden = true;
+            mainHUD.removeChild(foregroundHUD);
+            foregroundHUD = null;
+        }
     }
+    mainHUD.draw();
 });
 
 register('step', () => {
-    TabList.getNames().forEach(tab => {
+    TabList?.getNames()?.forEach(tab => {
         if (ChatLib.removeFormatting(tab).includes("Area:")) {
             const area = ChatLib.removeFormatting(tab).split(" ")[1];
             if(area !== "Crimson") {
