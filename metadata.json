@@ -1,0 +1,8 @@
+{
+    "name": "MinibossTimer",
+    "version": "1.0.0",
+    "creator": "Dawjaw",
+    "description": "Shows a timer for crimson isle minibosses",
+    "entry": "index.js",
+    "requires": ["Elementa", "Vigilance", "requestV2", "PromiseV2"]
+  }
