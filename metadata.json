@@ -1,6 +1,6 @@
 {
     "name": "MinibossTimer",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "creator": "Dawjaw",
     "description": "Shows a timer for crimson isle minibosses",
     "entry": "index.js",
