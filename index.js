@@ -1,4 +1,4 @@
-/// <reference types="../CTAutocomplete-2.0.4" />
+/// <reference types="../CTAutocomplete" />
 /// <reference lib="es2015" />
 import Settings from "./config"
 import { request } from "requestV2"
@@ -235,6 +235,7 @@ register('renderOverlay', () => {
 });
 
 register('step', () => {
+    if(!World.isLoaded()) return;
     TabList?.getNames()?.forEach(tab => {
         if (ChatLib.removeFormatting(tab).includes("Area:")) {
             const area = ChatLib.removeFormatting(tab).split(" ")[1];
@@ -249,6 +250,25 @@ register('step', () => {
         }
     });
 }).setDelay(5);
+
+const MENU_TITLES = ["Crimson Isle ➜ Ashfang", "Crimson Isle ➜ Bladesoul", "Crimson Isle ➜ Barbarian Duke X", "Crimson Isle ➜ Mage Outlaw"];
+const MENU_TITLES_TO_CREATURES = {"Crimson Isle ➜ Ashfang": "ashfang", "Crimson Isle ➜ Bladesoul": "bladesoul", "Crimson Isle ➜ Barbarian Duke X": "duke", "Crimson Isle ➜ Mage Outlaw": "mage"};
+const ITEM_NAME_TO_CREATURE = {"[lv200] ashfang": "ashfang", "[lv200] bladesoul": "bladesoul", "[lv200] barbarian duke x": "duke", "[lv200] mage outlaw": "mage"};
+
+register('step', () => {
+    const MENU_TITLE = Player.getContainer().getName().trim();
+    if (MENU_TITLES.includes(MENU_TITLE)) {
+        Player.getContainer().getItems().forEach(child => {
+            if (!child?.getName()?.toLowerCase()) return;
+            const CREATURE = ChatLib.removeFormatting(child?.getName()?.toLowerCase().trim());
+            if(MENU_TITLES_TO_CREATURES[MENU_TITLE] === ITEM_NAME_TO_CREATURE[CREATURE]) {
+                saveData[`kills_${ITEM_NAME_TO_CREATURE[CREATURE]}`] = ChatLib.removeFormatting(child?.getLore()[4]).trim().split(" ")[1];
+                Settings.saveData = JSON.stringify(saveData);
+                Settings.save();
+            }
+        });
+    }
+}).setFps(5);
 
 register('chat', (key) => {
     Settings.apiKey = key;
